@@ -1,0 +1,4 @@
+100
+10
+kruskal
+mouse_thread
