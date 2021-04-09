@@ -7,8 +7,10 @@ public class Cell {
     private boolean leftWall;
     private final int ROW;
     private final int COL;
+    private final int CELL_ID;
 
-    public Cell(int value, int row, int col) {
+    public Cell(int value, int row, int col, int cellID) {
+        this.CELL_ID = cellID;
         this.cellValue = value;
         this.ROW = row;
         this.COL = col;
@@ -23,9 +25,17 @@ public class Cell {
         System.out.print(cellValue + " ");
     }
 
+    public void printCellID(){
+        System.out.print(CELL_ID + " ");
+    }
+
     public void visit(){
         cellValue = 1;
         visited = true;
+    }
+
+    public int getCELL_ID() {
+        return CELL_ID;
     }
 
     public boolean isVisited() {

@@ -8,7 +8,6 @@ import java.io.*;
 public class Mazes extends Application {
     private static int mazeSize;
     private static int cellSize;
-    private static int rowsCols;
 
     public static void main(String[] args) throws IOException {
         readTheFile(args[0]);
@@ -22,9 +21,15 @@ public class Mazes extends Application {
         Pane root = new Pane(canvas);
 
         Board b = new Board(mazeSize/cellSize);
-        b.printBoard();
-        System.out.println();
-        b.depthFirstSearch();
+
+        //This one runs a DFS
+//        b.printBoard();
+//        System.out.println();
+//        b.depthFirstSearch();
+
+        //This one runs a kruskal
+//        b.printBoard();
+//        b.kruskal();
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
