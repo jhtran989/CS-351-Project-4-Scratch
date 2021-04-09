@@ -1,49 +1,34 @@
-import jdk.swing.interop.SwingInterOpUtils;
-
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 import java.util.Stack;
 
 public class Board {
 
-    private int boardSize;
-    private Cell[][] board;
+    private final int BOARD_SIZE;
+    private final Cell[][] BOARD;
     Stack<Cell> pathStack = new Stack<Cell>();
 
     public Board(int boardSize) {
-        board = new Cell[boardSize][boardSize];
-        this.boardSize = boardSize;
+        BOARD = new Cell[boardSize][boardSize];
+        this.BOARD_SIZE = boardSize;
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
-                board[i][j] = new Cell(0, i, j);
+                BOARD[i][j] = new Cell(0, i, j);
             }
         }
     }
 
     public void printBoard(){
-        for (int i = 0; i < boardSize; i++) {
-            for (int j = 0; j < boardSize; j++) {
-                board[i][j].printCellValue();
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                BOARD[i][j].printCellValue();
             }
             System.out.println();
         }
     }
 
-    public void pickRandomStartCell(){
-        Random rand = new Random();
-        int row, col;
-        row = rand.nextInt(boardSize);
-        col = rand.nextInt(boardSize);
-        System.out.println("row =  " + row);
-        System.out.println("column = " + col);
-        board[row][col].visit();
-        pathStack.push(board[row][col]);
-        //depthFirstSearch();
-    }
-
     public void depthFirstSearch(){
-        Cell c = board[0][0];
+        Cell c = BOARD[0][0];
         pathStack.push(c);
         c.visit();
         ArrayList<Cell> neighbors;
@@ -70,36 +55,32 @@ public class Board {
 
     public ArrayList<Cell> getNeighbors(Cell c){
         ArrayList<Cell> neighbors = new ArrayList<>();
-        if (c.getRow() > 0){ //check left
-            if (!board[c.getRow() - 1][c.getCol()].isVisited()){
-                neighbors.add(board[c.getRow() - 1][c.getCol()]);
+        if (c.getROW() > 0){ //check left
+            if (!BOARD[c.getROW() - 1][c.getCOL()].isVisited()){
+                neighbors.add(BOARD[c.getROW() - 1][c.getCOL()]);
                 c.setLeftWall(false);
-                board[c.getRow() - 1][c.getCol()].setRightWall(false);
-                System.out.println("CHECK LEFT WORKED");
+                BOARD[c.getROW() - 1][c.getCOL()].setRightWall(false);
             }
         }
-        if (c.getRow() < (boardSize - 1)){ //check right
-            if (!board[c.getRow() + 1][c.getCol()].isVisited()){
-                neighbors.add(board[c.getRow() + 1][c.getCol()]);
+        if (c.getROW() < (BOARD_SIZE - 1)){ //check right
+            if (!BOARD[c.getROW() + 1][c.getCOL()].isVisited()){
+                neighbors.add(BOARD[c.getROW() + 1][c.getCOL()]);
                 c.setRightWall(false);
-                board[c.getRow() + 1][c.getCol()].setLeftWall(false);
-                System.out.println("CHECK RIGHT WORKED");
+                BOARD[c.getROW() + 1][c.getCOL()].setLeftWall(false);
             }
         }
-        if (c.getCol() > 0){ //check up
-            if (!board[c.getRow()][c.getCol() - 1].isVisited()){
-                neighbors.add(board[c.getRow()][c.getCol() - 1]);
+        if (c.getCOL() > 0){ //check up
+            if (!BOARD[c.getROW()][c.getCOL() - 1].isVisited()){
+                neighbors.add(BOARD[c.getROW()][c.getCOL() - 1]);
                 c.setUpWall(false);
-                board[c.getRow()][c.getCol() - 1].setDownWall(false);
-                System.out.println("CHECK UP WORKED");
+                BOARD[c.getROW()][c.getCOL() - 1].setDownWall(false);
             }
         }
-        if (c.getCol() < boardSize){ //check down
-            if (!board[c.getRow()][c.getCol() + 1].isVisited()){
-                neighbors.add(board[c.getRow()][c.getCol() + 1]);
+        if (c.getCOL() < (BOARD_SIZE - 1)){ //check down
+            if (!BOARD[c.getROW()][c.getCOL() + 1].isVisited()){
+                neighbors.add(BOARD[c.getROW()][c.getCOL() + 1]);
                 c.setDownWall(false);
-                board[c.getRow()][c.getCol() + 1].setUpWall(false);
-                System.out.println("CHECK DOWN WORKED");
+                BOARD[c.getROW()][c.getCOL() + 1].setUpWall(false);
             }
         }
         return neighbors;

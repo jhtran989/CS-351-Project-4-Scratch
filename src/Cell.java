@@ -5,13 +5,13 @@ public class Cell {
     private boolean rightWall;
     private boolean downWall;
     private boolean leftWall;
-    private int row;
-    private int col;
+    private final int ROW;
+    private final int COL;
 
     public Cell(int value, int row, int col) {
         this.cellValue = value;
-        this.row = row;
-        this.col = col;
+        this.ROW = row;
+        this.COL = col;
         visited = false;
         upWall = true;
         rightWall = true;
@@ -32,52 +32,24 @@ public class Cell {
         return visited;
     }
 
-    public void setVisited(boolean visited) {
-        this.visited = visited;
+    public int getROW() {
+        return ROW;
     }
 
-    public int getRow() {
-        return row;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    public int getCol() {
-        return col;
-    }
-
-    public void setCol(int col) {
-        this.col = col;
-    }
-
-    public boolean isUpWall() {
-        return upWall;
+    public int getCOL() {
+        return COL;
     }
 
     public void setUpWall(boolean upWall) {
         this.upWall = upWall;
     }
 
-    public boolean isRightWall() {
-        return rightWall;
-    }
-
     public void setRightWall(boolean rightWall) {
         this.rightWall = rightWall;
     }
 
-    public boolean isDownWall() {
-        return downWall;
-    }
-
     public void setDownWall(boolean downWall) {
         this.downWall = downWall;
-    }
-
-    public boolean isLeftWall() {
-        return leftWall;
     }
 
     public void setLeftWall(boolean leftWall) {

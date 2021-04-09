@@ -10,7 +10,6 @@ public class Mazes extends Application {
     private static int cellSize;
     private static int rowsCols;
 
-
     public static void main(String[] args) throws IOException {
         readTheFile(args[0]);
         launch(args);
@@ -26,9 +25,6 @@ public class Mazes extends Application {
         b.printBoard();
         System.out.println();
         b.depthFirstSearch();
-        //b.pickRandomStartCell();
-        b.printBoard();
-
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
