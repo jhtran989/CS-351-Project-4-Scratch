@@ -8,6 +8,8 @@ import java.io.*;
 public class Mazes extends Application {
     private static int mazeSize;
     private static int cellSize;
+    private static String algorithm;
+    private static String solver;
 
     public static void main(String[] args) throws IOException {
         readTheFile(args[0]);
@@ -22,14 +24,21 @@ public class Mazes extends Application {
 
         Board b = new Board(mazeSize/cellSize);
 
-        //This one runs a DFS
-//        b.printBoard();
-//        System.out.println();
-//        b.depthFirstSearch();
+        if (algorithm.equals("dfs")){
+            b.printBoard();
+            System.out.println();
+            b.depthFirstSearch();
+        }
 
-        //This one runs a kruskal
-//        b.printBoard();
-//        b.kruskal();
+        if (algorithm.equals("kruskal")){
+            b.printBoard();
+            b.kruskal();
+        }
+
+        if(algorithm.equals("prim")){
+            b.printBoard();
+            b.prim();
+        }
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
@@ -40,8 +49,8 @@ public class Mazes extends Application {
         try (BufferedReader br = new BufferedReader(new FileReader(args))) {
             mazeSize = Integer.parseInt(br.readLine());
             cellSize = Integer.parseInt(br.readLine());
-            String algorithm = br.readLine();
-            String solver = br.readLine();
+            algorithm = br.readLine();
+            solver = br.readLine();
             System.out.println(mazeSize);
             System.out.println(cellSize);
             System.out.println(algorithm);

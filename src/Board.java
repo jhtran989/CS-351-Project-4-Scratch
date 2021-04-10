@@ -20,8 +20,56 @@ public class Board {
         }
     }
 
-    //# of edges should be 2(n-1)^2 + 2(n-1)
     public void kruskal(){
+        ArrayList<Edge> edges= getAllEdges();
+        Collections.shuffle(edges);
+        kruskalHelper(edges);
+    }
+
+    public void prim(){
+        //ArrayList<Edge> edges = getAllEdges();
+        Cell c = BOARD[0][0];
+        c.visit();
+        ArrayList<Cell> neighbors = getNeighbors(c);
+        while(!neighbors.isEmpty()){
+            printBoard();
+            System.out.println();
+            Collections.shuffle(neighbors);
+            c = neighbors.get(0);
+            c.visit();
+            if (c.getROW() > 0){ //check up
+                if (BOARD[c.getROW() - 1][c.getCOL()].isVisited()){
+                    c.setUpWall(false);
+                    BOARD[c.getROW() - 1][c.getCOL()].setDownWall(false);
+                }
+            }
+            else if (c.getROW() < BOARD_SIZE - 1){ //check down
+                if (BOARD[c.getROW() + 1][c.getCOL()].isVisited()){
+                    c.setDownWall(false);
+                    BOARD[c.getROW() + 1][c.getCOL()].setUpWall(false);
+                }
+            }
+            else if (c.getCOL() > 0){ //check left
+                if (BOARD[c.getROW()][c.getCOL() - 1].isVisited()){
+                    c.setLeftWall(false);
+                    BOARD[c.getROW()][c.getCOL() - 1].setRightWall(false);
+                }
+
+            }
+            else if (c.getCOL() < BOARD_SIZE - 1){ //check right
+                if (BOARD[c.getROW()][c.getCOL() + 1].isVisited()){
+                    c.setRightWall(false);
+                    BOARD[c.getROW()][c.getCOL() + 1].setLeftWall(false);
+                }
+            }
+            neighbors.remove(0);
+            ArrayList<Cell> temp = getNeighbors(c);
+            neighbors.addAll(temp);
+        }
+    }
+
+    //# of edges should be 2(n-1)^2 + 2(n-1)
+    public ArrayList<Edge> getAllEdges(){
         ArrayList<Edge> edges = new ArrayList<>();
         for (int i = 0; i < (BOARD_SIZE); i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
@@ -40,8 +88,7 @@ public class Board {
             edge.getCELL_TWO().printCellID();
             System.out.println();
         }
-        Collections.shuffle(edges);
-        kruskalHelper(edges);
+        return edges;
     }
 
     public void kruskalHelper(ArrayList<Edge> edges){
@@ -97,7 +144,7 @@ public class Board {
         pathStack.push(c);
         c.visit();
         ArrayList<Cell> neighbors;
-        neighbors = getNeighbors(c);
+        neighbors = getNeighborsBreakWalls(c);
         Collections.shuffle(neighbors);
         for (Cell neighbor : neighbors) {
             pathStack.push(neighbor);
@@ -107,7 +154,7 @@ public class Board {
         neighbors.clear();
         while(!pathStack.empty()){
             c = pathStack.pop();
-            neighbors = getNeighbors(c);
+            neighbors = getNeighborsBreakWalls(c);
             Collections.shuffle(neighbors);
             for (Cell neighbor : neighbors) {
                 pathStack.push(neighbor);
@@ -120,32 +167,57 @@ public class Board {
 
     public ArrayList<Cell> getNeighbors(Cell c){
         ArrayList<Cell> neighbors = new ArrayList<>();
-        if (c.getROW() > 0){ //check left
+        if (c.getROW() > 0){ //check up
             if (!BOARD[c.getROW() - 1][c.getCOL()].isVisited()){
                 neighbors.add(BOARD[c.getROW() - 1][c.getCOL()]);
-                c.setLeftWall(false);
-                BOARD[c.getROW() - 1][c.getCOL()].setRightWall(false);
             }
         }
-        if (c.getROW() < (BOARD_SIZE - 1)){ //check right
+        if (c.getROW() < (BOARD_SIZE - 1)){ //check down
             if (!BOARD[c.getROW() + 1][c.getCOL()].isVisited()){
                 neighbors.add(BOARD[c.getROW() + 1][c.getCOL()]);
-                c.setRightWall(false);
-                BOARD[c.getROW() + 1][c.getCOL()].setLeftWall(false);
             }
         }
-        if (c.getCOL() > 0){ //check up
+        if (c.getCOL() > 0){ //check left
             if (!BOARD[c.getROW()][c.getCOL() - 1].isVisited()){
                 neighbors.add(BOARD[c.getROW()][c.getCOL() - 1]);
-                c.setUpWall(false);
-                BOARD[c.getROW()][c.getCOL() - 1].setDownWall(false);
             }
         }
-        if (c.getCOL() < (BOARD_SIZE - 1)){ //check down
+        if (c.getCOL() < (BOARD_SIZE - 1)){ //check right
             if (!BOARD[c.getROW()][c.getCOL() + 1].isVisited()){
                 neighbors.add(BOARD[c.getROW()][c.getCOL() + 1]);
+            }
+        }
+        return neighbors;
+    }
+
+    public ArrayList<Cell> getNeighborsBreakWalls(Cell c){
+        ArrayList<Cell> neighbors = new ArrayList<>();
+        if (c.getROW() > 0){ //check up
+            if (!BOARD[c.getROW() - 1][c.getCOL()].isVisited()){
+                neighbors.add(BOARD[c.getROW() - 1][c.getCOL()]);
+                c.setUpWall(false);
+                BOARD[c.getROW() - 1][c.getCOL()].setDownWall(false);
+            }
+        }
+        if (c.getROW() < (BOARD_SIZE - 1)){ //check down
+            if (!BOARD[c.getROW() + 1][c.getCOL()].isVisited()){
+                neighbors.add(BOARD[c.getROW() + 1][c.getCOL()]);
                 c.setDownWall(false);
-                BOARD[c.getROW()][c.getCOL() + 1].setUpWall(false);
+                BOARD[c.getROW() + 1][c.getCOL()].setUpWall(false);
+            }
+        }
+        if (c.getCOL() > 0){ //check left
+            if (!BOARD[c.getROW()][c.getCOL() - 1].isVisited()){
+                neighbors.add(BOARD[c.getROW()][c.getCOL() - 1]);
+                c.setLeftWall(false);
+                BOARD[c.getROW()][c.getCOL() - 1].setRightWall(false);
+            }
+        }
+        if (c.getCOL() < (BOARD_SIZE - 1)){ //check right
+            if (!BOARD[c.getROW()][c.getCOL() + 1].isVisited()){
+                neighbors.add(BOARD[c.getROW()][c.getCOL() + 1]);
+                c.setRightWall(false);
+                BOARD[c.getROW()][c.getCOL() + 1].setLeftWall(false);
             }
         }
         return neighbors;
