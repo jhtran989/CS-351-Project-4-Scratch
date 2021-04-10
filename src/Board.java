@@ -3,11 +3,20 @@ import java.util.Collections;
 import java.util.Stack;
 
 public class Board {
-
     private final int BOARD_SIZE;
     private final Cell[][] BOARD;
     Stack<Cell> pathStack = new Stack<>();
 
+    /**
+     * FIXME: board size also needs to account for the EDGES (walls in general)
+     *
+     * if no outline of walls is used, then
+     * cellBoardDimension = ceiling(BOARD_SIZE / 2)
+     * if there is an outline
+     * cellBoardDimension = floor(BOARD_SIZE / 2)
+     *
+     * @param boardSize
+     */
     public Board(int boardSize) {
         BOARD = new Cell[boardSize][boardSize];
         this.BOARD_SIZE = boardSize;
@@ -128,6 +137,8 @@ public class Board {
             }
             System.out.println();
         }
+
+        System.out.println();
     }
 
     public void printBoardID(){
@@ -139,28 +150,95 @@ public class Board {
         }
     }
 
+    public void printBoardAddresses() {
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                System.out.print(BOARD[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
     public void depthFirstSearch(){
-        Cell c = BOARD[0][0];
+        // FIXME: not random yet...
+        // added dummy cell
+        DummyCell dummyCell = new DummyCell();
+        dummyCell.addToDummy(BOARD[0][0]);
+        Cell c = dummyCell.getFromDummy();
+        c.setPreviousCell(c); // important for backtracking
+
+        System.out.println("Original " + BOARD[0][0]);
+        System.out.println("New " + dummyCell.getFromDummy());
+        // FIXME: helps with the GUI...update edges
+//        ArrayList<Edge> edges = getAllEdges();
+
         pathStack.push(c);
         c.visit();
         ArrayList<Cell> neighbors;
         neighbors = getNeighborsBreakWalls(c);
         Collections.shuffle(neighbors);
         for (Cell neighbor : neighbors) {
+            neighbor.setPreviousCell(dummyCell.getFromDummy());
             pathStack.push(neighbor);
-            neighbor.visit();
+            //neighbor.visit();
+            neighbor.onlyVisit();
         }
         printBoard();
         neighbors.clear();
         while(!pathStack.empty()){
-            c = pathStack.pop();
+            dummyCell.addToDummy(pathStack.pop());
+            c = dummyCell.getFromDummy();
+            //c.setPreviousCell(dummyCell.getFromDummy());
+            if (c.isVisited()) {
+                c.updateCellPath();
+            }
+            printBoard();
             neighbors = getNeighborsBreakWalls(c);
             Collections.shuffle(neighbors);
             for (Cell neighbor : neighbors) {
+                neighbor.setPreviousCell(dummyCell.getFromDummy());
                 pathStack.push(neighbor);
-                neighbor.visit();
+                //neighbor.visit();
+                neighbor.onlyVisit();
             }
-            printBoard();
+            if (!pathStack.isEmpty()) {
+                Cell nextCell;
+                nextCell = pathStack.pop();
+                dummyCell.addToDummy(nextCell);
+                pathStack.push(nextCell);
+
+                if (neighbors.isEmpty()) {
+                    c.updateCellPathBackTrack();
+                    nextCell = pathStack.pop();
+                    System.out.println("Next cell " + nextCell);
+                    Cell returnCell = nextCell.getPreviousCell();
+                    Cell previousCell = c.getPreviousCell();
+                    // FIXME
+                    printBoardAddresses();
+                    System.out.println("Current cell " + c);
+                    System.out.println("Return cell " + returnCell);
+                    // FIXME
+                    System.out.println("Previous cell " + previousCell);
+                    while (previousCell != returnCell) {
+                        previousCell.updateCellPathBackTrack();
+                        previousCell = previousCell.getPreviousCell();
+                        // FIXME
+                        System.out.println("Previous cell " + previousCell);
+                    }
+                    pathStack.push(nextCell);
+                    // FIXME: also update all cells along path to last cell with
+                    //  more neighbors to check...maybe add previous cell field
+                    //  to each cell so we "connect" each cell with the cell that
+                    //  connects to it
+                    printBoard();
+                }
+            } else {
+                System.out.println("Last backtrack...");
+                System.out.println("Current " + c);
+                c.updateCellPathBackTrack();
+                printBoard();
+            }
+//            printBoard();
             neighbors.clear();
         }
     }

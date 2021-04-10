@@ -8,6 +8,7 @@ public class Cell {
     private final int ROW;
     private final int COL;
     private final int CELL_ID;
+    private Cell previousCell;
 
     public Cell(int value, int row, int col, int cellID) {
         this.CELL_ID = cellID;
@@ -34,6 +35,18 @@ public class Cell {
         visited = true;
     }
 
+    public void onlyVisit() {
+        visited = true;
+    }
+
+    public void updateCellPath() {
+        cellValue = 1;
+    }
+
+    public void updateCellPathBackTrack() {
+        cellValue = 2;
+    }
+
     public int getCELL_ID() {
         return CELL_ID;
     }
@@ -50,6 +63,10 @@ public class Cell {
         return COL;
     }
 
+    public Cell getPreviousCell() {
+        return previousCell;
+    }
+
     public void setUpWall(boolean upWall) {
         this.upWall = upWall;
     }
@@ -64,5 +81,9 @@ public class Cell {
 
     public void setLeftWall(boolean leftWall) {
         this.leftWall = leftWall;
+    }
+
+    public void setPreviousCell(Cell previousCell) {
+        this.previousCell = previousCell;
     }
 }
