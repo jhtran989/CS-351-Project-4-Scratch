@@ -1,4 +1,4 @@
-100
-20
-prim
+400
+10
+dfs
 mouse_thread

@@ -1,13 +1,16 @@
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 import java.io.*;
 
 public class Mazes extends Application {
     private static int mazeSize;
     private static int cellSize;
+    private static int numberOfCells;
     private static String algorithm;
     private static String solver;
 
@@ -19,16 +22,28 @@ public class Mazes extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Mazes");
-        Canvas canvas = new Canvas(mazeSize, mazeSize);
-        Pane root = new Pane(canvas);
+//        Canvas canvas = new Canvas(mazeSize, mazeSize);
+        numberOfCells = (mazeSize/cellSize) * (mazeSize/cellSize);
+        System.out.println("Maze size: " + mazeSize);
+        System.out.println("Cell size: " + cellSize);
+        System.out.println("Number of cells: " + numberOfCells);
+        TilePane tp = new TilePane();
+        tp.setPrefRows(mazeSize/cellSize);
+        tp.setPrefColumns(mazeSize/cellSize);
+        Pane root = new Pane(tp);
 
         Board b = new Board(mazeSize/cellSize);
-        CellVisual cv = new CellVisual(cellSize);
-        root.getChildren().add(cv.getG());
+//        CellVisual cv = new CellVisual(cellSize);
+//        root.getChildren().add(cv.getG());
+        for (int i = 0; i < numberOfCells; i++) {
+            tp.getChildren().add(i, new CellVisual(cellSize).getG());
+        }
+
+
 
         if (algorithm.equals("dfs")){
-            b.printBoard();
-            System.out.println();
+//            b.printBoard();
+//            System.out.println();
             b.depthFirstSearch();
         }
 

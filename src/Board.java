@@ -150,7 +150,7 @@ public class Board {
             pathStack.push(neighbor);
             neighbor.visit();
         }
-        printBoard();
+//        printBoard();
         neighbors.clear();
         while(!pathStack.empty()){
             c = pathStack.pop();
@@ -160,7 +160,7 @@ public class Board {
                 pathStack.push(neighbor);
                 neighbor.visit();
             }
-            printBoard();
+//            printBoard();
             neighbors.clear();
         }
     }
