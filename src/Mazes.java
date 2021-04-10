@@ -23,6 +23,8 @@ public class Mazes extends Application {
         Pane root = new Pane(canvas);
 
         Board b = new Board(mazeSize/cellSize);
+        CellVisual cv = new CellVisual(cellSize);
+        root.getChildren().add(cv.getG());
 
         if (algorithm.equals("dfs")){
             b.printBoard();
@@ -37,6 +39,7 @@ public class Mazes extends Application {
 
         if(algorithm.equals("prim")){
             b.printBoard();
+            System.out.println();
             b.prim();
         }
 
