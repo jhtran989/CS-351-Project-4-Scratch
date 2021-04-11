@@ -27,28 +27,36 @@ public class Mazes extends Application {
         System.out.println("Maze size: " + mazeSize);
         System.out.println("Cell size: " + cellSize);
         System.out.println("Number of cells: " + numberOfCells);
-        TilePane tp = new TilePane();
-        tp.setPrefRows(mazeSize/cellSize);
-        tp.setPrefColumns(mazeSize/cellSize);
-        Pane root = new Pane(tp);
+//        TilePane tp = new TilePane();
+//        tp.setPrefRows(mazeSize/cellSize);
+//        tp.setPrefColumns(mazeSize/cellSize);
+//        Pane root = new Pane(tp);
 
         Board b = new Board(mazeSize/cellSize);
+//        CellVisualTwo cv = new CellVisualTwo(cellSize);
+//        root.getChildren().add(cv);
 //        CellVisual cv = new CellVisual(cellSize);
 //        root.getChildren().add(cv.getG());
-        for (int i = 0; i < numberOfCells; i++) {
-            tp.getChildren().add(i, new CellVisual(cellSize).getG());
-        }
+//        cv.removeLeft();
+//        cv.removeBot();
+//        cv.removeRight();
+//        cv.removeTop();
+//        for (int i = 0; i < numberOfCells; i++) {
+//            tp.getChildren().add(i, new CellVisual(cellSize).getG());
+//        }
+
 
 
 
         if (algorithm.equals("dfs")){
-//            b.printBoard();
-//            System.out.println();
+            b.printBoard();
+            System.out.println();
             b.depthFirstSearch();
         }
 
         if (algorithm.equals("kruskal")){
             b.printBoard();
+            System.out.println();
             b.kruskal();
         }
 
@@ -58,9 +66,9 @@ public class Mazes extends Application {
             b.prim();
         }
 
-        Scene scene = new Scene(root);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+//        Scene scene = new Scene(root);
+//        primaryStage.setScene(scene);
+//        primaryStage.show();
     }
 
     public static void readTheFile(String args) throws IOException {

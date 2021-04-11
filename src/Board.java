@@ -27,9 +27,9 @@ public class Board {
     }
 
     public void prim(){
-        //ArrayList<Edge> edges = getAllEdges();
         Cell c = BOARD[0][0];
         c.visit();
+        System.out.println("visit cell " + c.getCELL_ID());
         ArrayList<Cell> neighbors = getNeighbors(c);
         while(!neighbors.isEmpty()){
             printBoard();
@@ -37,6 +37,7 @@ public class Board {
             Collections.shuffle(neighbors);
             c = neighbors.get(0);
             c.visit();
+            System.out.println("visit cell " + c.getCELL_ID());
             if (c.getROW() > 0){ //check up
                 if (BOARD[c.getROW() - 1][c.getCOL()].isVisited()){
                     c.setUpWall(false);
@@ -64,8 +65,14 @@ public class Board {
             }
             neighbors.remove(0);
             ArrayList<Cell> temp = getNeighbors(c);
-            neighbors.addAll(temp);
+            for (Cell cell : temp) {
+                if (!neighbors.contains(cell)) {
+                    neighbors.add(cell);
+                }
+            }
+            System.out.println();
         }
+        printBoard();
     }
 
     //# of edges should be 2(n-1)^2 + 2(n-1)
@@ -150,7 +157,8 @@ public class Board {
             pathStack.push(neighbor);
             neighbor.visit();
         }
-//        printBoard();
+        printBoard();
+        System.out.println();
         neighbors.clear();
         while(!pathStack.empty()){
             c = pathStack.pop();
@@ -160,7 +168,8 @@ public class Board {
                 pathStack.push(neighbor);
                 neighbor.visit();
             }
-//            printBoard();
+            printBoard();
+            System.out.println();
             neighbors.clear();
         }
     }
