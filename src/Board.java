@@ -245,6 +245,7 @@ public class Board {
         }
         if (solver.equals("wall")){
             System.out.println("Solver type chosen is: " + solver);
+            wall();
         }
         if (solver.equals("wall_thread")){
             System.out.println("Solver type chosen is: " + solver);
@@ -298,4 +299,179 @@ public class Board {
         System.out.println("MOUSE MADE IT THROUGH THE MAZE!!!!");
         System.out.println(c.getCELL_ID());
     }
+
+    public void wall(){
+        //mouse enters maze from above the top left cell
+        Cell c = BOARD[0][0];
+        String currentDirection = "south";
+        while (c.getCELL_ID() != BOARD[BOARD_SIZE - 1][BOARD_SIZE - 1].getCELL_ID()){
+            switch (currentDirection) {
+                case "south":
+                    if (!c.isLeftWall()) {
+                        c = BOARD[c.getROW()][c.getCOL() - 1];
+                        currentDirection = "west";
+                        break;
+                    } else if (!c.isDownWall()) {
+                        c = BOARD[c.getROW() + 1][c.getCOL()];
+                        currentDirection = "south";
+                        break;
+                    } else if (!c.isRightWall()) {
+                        c = BOARD[c.getROW()][c.getCOL() + 1];
+                        currentDirection = "east";
+                        break;
+                    } else if (!c.isUpWall()) {
+                        c = BOARD[c.getROW() - 1][c.getCOL()];
+                        currentDirection = "north";
+                        break;
+                    }
+                    break;
+                case "east":
+                    if (!c.isDownWall()) {
+                        c = BOARD[c.getROW() + 1][c.getCOL()];
+                        currentDirection = "south";
+                        break;
+                    } else if (!c.isRightWall()) {
+                        c = BOARD[c.getROW()][c.getCOL() + 1];
+                        currentDirection = "east";
+                        break;
+                    } else if (!c.isUpWall()) {
+                        c = BOARD[c.getROW() - 1][c.getCOL()];
+                        currentDirection = "north";
+                        break;
+                    } else if (!c.isLeftWall()) {
+                        c = BOARD[c.getROW()][c.getCOL() - 1];
+                        currentDirection = "west";
+                        break;
+                    }
+                    break;
+                case "north":
+                    if (!c.isRightWall()) {
+                        c = BOARD[c.getROW()][c.getCOL() + 1];
+                        currentDirection = "east";
+                        break;
+                    } else if (!c.isUpWall()) {
+                        c = BOARD[c.getROW() - 1][c.getCOL()];
+                        currentDirection = "north";
+                        break;
+                    } else if (!c.isLeftWall()) {
+                        c = BOARD[c.getROW()][c.getCOL() - 1];
+                        currentDirection = "west";
+                        break;
+                    } else if (!c.isDownWall()) {
+                        c = BOARD[c.getROW() + 1][c.getCOL()];
+                        currentDirection = "south";
+                        break;
+                    }
+                    break;
+                case "west":
+                    if (!c.isUpWall()) {
+                        c = BOARD[c.getROW() - 1][c.getCOL()];
+                        currentDirection = "north";
+                        break;
+                    } else if (!c.isLeftWall()) {
+                        c = BOARD[c.getROW()][c.getCOL() - 1];
+                        currentDirection = "west";
+                        break;
+                    } else if (!c.isDownWall()) {
+                        c = BOARD[c.getROW() + 1][c.getCOL()];
+                        currentDirection = "south";
+                        break;
+                    } else if (!c.isRightWall()) {
+                        c = BOARD[c.getROW()][c.getCOL() + 1];
+                        currentDirection = "east";
+                        break;
+                    }
+                    break;
+            }
+            System.out.println("Wall traveler travelled to " + c.getCELL_ID());
+        }
+        System.out.println("MOUSE MADE IT TTO THE END OF THE MAZE!!!!");
+        System.out.println(c.getCELL_ID());
+        //mouse finished, leaves the maze below the bottom right cell
+        currentDirection = "north";
+        while (c.getCELL_ID() != BOARD[0][0].getCELL_ID()){
+            switch (currentDirection) {
+                case "south":
+                    if (!c.isLeftWall()) {
+                        c = BOARD[c.getROW()][c.getCOL() - 1];
+                        currentDirection = "west";
+                        break;
+                    } else if (!c.isDownWall()) {
+                        c = BOARD[c.getROW() + 1][c.getCOL()];
+                        currentDirection = "south";
+                        break;
+                    } else if (!c.isRightWall()) {
+                        c = BOARD[c.getROW()][c.getCOL() + 1];
+                        currentDirection = "east";
+                        break;
+                    } else if (!c.isUpWall()) {
+                        c = BOARD[c.getROW() - 1][c.getCOL()];
+                        currentDirection = "north";
+                        break;
+                    }
+                    break;
+                case "east":
+                    if (!c.isDownWall()) {
+                        c = BOARD[c.getROW() + 1][c.getCOL()];
+                        currentDirection = "south";
+                        break;
+                    } else if (!c.isRightWall()) {
+                        c = BOARD[c.getROW()][c.getCOL() + 1];
+                        currentDirection = "east";
+                        break;
+                    } else if (!c.isUpWall()) {
+                        c = BOARD[c.getROW() - 1][c.getCOL()];
+                        currentDirection = "north";
+                        break;
+                    } else if (!c.isLeftWall()) {
+                        c = BOARD[c.getROW()][c.getCOL() - 1];
+                        currentDirection = "west";
+                        break;
+                    }
+                    break;
+                case "north":
+                    if (!c.isRightWall()) {
+                        c = BOARD[c.getROW()][c.getCOL() + 1];
+                        currentDirection = "east";
+                        break;
+                    } else if (!c.isUpWall()) {
+                        c = BOARD[c.getROW() - 1][c.getCOL()];
+                        currentDirection = "north";
+                        break;
+                    } else if (!c.isLeftWall()) {
+                        c = BOARD[c.getROW()][c.getCOL() - 1];
+                        currentDirection = "west";
+                        break;
+                    } else if (!c.isDownWall()) {
+                        c = BOARD[c.getROW() + 1][c.getCOL()];
+                        currentDirection = "south";
+                        break;
+                    }
+                    break;
+                case "west":
+                    if (!c.isUpWall()) {
+                        c = BOARD[c.getROW() - 1][c.getCOL()];
+                        currentDirection = "north";
+                        break;
+                    } else if (!c.isLeftWall()) {
+                        c = BOARD[c.getROW()][c.getCOL() - 1];
+                        currentDirection = "west";
+                        break;
+                    } else if (!c.isDownWall()) {
+                        c = BOARD[c.getROW() + 1][c.getCOL()];
+                        currentDirection = "south";
+                        break;
+                    } else if (!c.isRightWall()) {
+                        c = BOARD[c.getROW()][c.getCOL() + 1];
+                        currentDirection = "east";
+                        break;
+                    }
+                    break;
+            }
+            System.out.println("Wall traveler travelled to " + c.getCELL_ID());
+        }
+        System.out.println("MOUSE MADE IT BACK HOME!!!");
+        System.out.println(c.getCELL_ID());
+    }
+
 }
