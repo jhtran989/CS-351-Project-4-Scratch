@@ -49,21 +49,23 @@ public class Mazes extends Application {
 
 
         if (algorithm.equals("dfs")){
+            System.out.println("Start cell: 0");
+            System.out.println("Finish cell: " + (numberOfCells - 1));
             b.printBoard();
             System.out.println();
-            b.depthFirstSearch();
+            b.depthFirstSearch(solver);
         }
 
         if (algorithm.equals("kruskal")){
             b.printBoard();
             System.out.println();
-            b.kruskal();
+            b.kruskal(solver);
         }
 
-        if(algorithm.equals("prim")){
+        if (algorithm.equals("prim")){
             b.printBoard();
             System.out.println();
-            b.prim();
+            b.prim(solver);
         }
 
 //        Scene scene = new Scene(root);

@@ -20,13 +20,73 @@ public class Board {
         }
     }
 
-    public void kruskal(){
-        ArrayList<Edge> edges= getAllEdges();
-        Collections.shuffle(edges);
-        kruskalHelper(edges);
+    public void depthFirstSearch(String solver){
+        Cell c = BOARD[0][0];
+        pathStack.push(c);
+        c.visit();
+        ArrayList<Cell> neighbors;
+        neighbors = getNeighborsBreakWalls(c);
+        Collections.shuffle(neighbors);
+        for (Cell neighbor : neighbors) {
+            pathStack.push(neighbor);
+            neighbor.visit();
+        }
+        printBoard();
+        System.out.println();
+        neighbors.clear();
+        while(!pathStack.empty()){
+            c = pathStack.pop();
+            neighbors = getNeighborsBreakWalls(c);
+            Collections.shuffle(neighbors);
+            for (Cell neighbor : neighbors) {
+                pathStack.push(neighbor);
+                neighbor.visit();
+            }
+            printBoard();
+            System.out.println();
+            neighbors.clear();
+        }
+        chooseSolver(solver);
     }
 
-    public void prim(){
+    public void kruskal(String solver){
+        ArrayList<Edge> edges= getAllEdges();
+        Collections.shuffle(edges);
+        kruskalHelper(edges, solver);
+    }
+
+    public void kruskalHelper(ArrayList<Edge> edges, String solver){
+        UnionFind uf = new UnionFind(BOARD_SIZE * BOARD_SIZE);
+        while(!edges.isEmpty()){
+            if (!uf.connected(edges.get(0).getCELL_ONE().getCELL_ID(),
+                    edges.get(0).getCELL_TWO().getCELL_ID())){
+                uf.union(edges.get(0).getCELL_ONE().getCELL_ID(),
+                        edges.get(0).getCELL_TWO().getCELL_ID());
+                if (edges.get(0).isHORIZONTAL()){
+                    edges.get(0).takeDownHorizontalWall();
+                    edges.get(0).getCELL_ONE().visit();
+                    edges.get(0).getCELL_TWO().visit();
+                }
+                if (edges.get(0).isVERTICAL()){
+                    edges.get(0).takeDownVerticalWall();
+                    edges.get(0).getCELL_ONE().visit();
+                    edges.get(0).getCELL_TWO().visit();
+                }
+//                System.out.println("edge removed: " + edges.get(0).getCELL_ONE().getCELL_ID() + ", " + edges.get(0).getCELL_TWO().getCELL_ID());
+                edges.remove(0);
+
+//                printBoard();
+//                System.out.println();
+            }
+            else{
+                System.out.println("EDGE KEPT "  + edges.get(0).getCELL_ONE().getCELL_ID() + ", " + edges.get(0).getCELL_TWO().getCELL_ID());
+                edges.remove(0);
+            }
+        }
+        chooseSolver(solver);
+    }
+
+    public void prim(String solver){
         Cell c = BOARD[0][0];
         c.visit();
         System.out.println("visit cell " + c.getCELL_ID());
@@ -73,6 +133,7 @@ public class Board {
             System.out.println();
         }
         printBoard();
+        chooseSolver(solver);
     }
 
     //# of edges should be 2(n-1)^2 + 2(n-1)
@@ -96,82 +157,6 @@ public class Board {
             System.out.println();
         }
         return edges;
-    }
-
-    public void kruskalHelper(ArrayList<Edge> edges){
-        UnionFind uf = new UnionFind(BOARD_SIZE * BOARD_SIZE);
-        while(!edges.isEmpty()){
-            if (!uf.connected(edges.get(0).getCELL_ONE().getCELL_ID(),
-                    edges.get(0).getCELL_TWO().getCELL_ID())){
-                uf.union(edges.get(0).getCELL_ONE().getCELL_ID(),
-                        edges.get(0).getCELL_TWO().getCELL_ID());
-                if (edges.get(0).isHORIZONTAL()){
-                    edges.get(0).takeDownHorizontalWall();
-                    edges.get(0).getCELL_ONE().visit();
-                    edges.get(0).getCELL_TWO().visit();
-                }
-                if (edges.get(0).isVERTICAL()){
-                    edges.get(0).takeDownVerticalWall();
-                    edges.get(0).getCELL_ONE().visit();
-                    edges.get(0).getCELL_TWO().visit();
-                }
-                edges.remove(0);
-                System.out.println("edge removed");
-                printBoard();
-                System.out.println();
-            }
-            else{
-                System.out.println("EDGE KEPT, NOT REMOVED");
-                edges.remove(0);
-            }
-
-        }
-    }
-
-    public void printBoard(){
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            for (int j = 0; j < BOARD_SIZE; j++) {
-                BOARD[i][j].printCellValue();
-            }
-            System.out.println();
-        }
-    }
-
-    public void printBoardID(){
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            for (int j = 0; j < BOARD_SIZE; j++) {
-                BOARD[i][j].printCellID();
-            }
-            System.out.println();
-        }
-    }
-
-    public void depthFirstSearch(){
-        Cell c = BOARD[0][0];
-        pathStack.push(c);
-        c.visit();
-        ArrayList<Cell> neighbors;
-        neighbors = getNeighborsBreakWalls(c);
-        Collections.shuffle(neighbors);
-        for (Cell neighbor : neighbors) {
-            pathStack.push(neighbor);
-            neighbor.visit();
-        }
-        printBoard();
-        System.out.println();
-        neighbors.clear();
-        while(!pathStack.empty()){
-            c = pathStack.pop();
-            neighbors = getNeighborsBreakWalls(c);
-            Collections.shuffle(neighbors);
-            for (Cell neighbor : neighbors) {
-                pathStack.push(neighbor);
-                neighbor.visit();
-            }
-            printBoard();
-            System.out.println();
-            neighbors.clear();
-        }
     }
 
     public ArrayList<Cell> getNeighbors(Cell c){
@@ -230,5 +215,87 @@ public class Board {
             }
         }
         return neighbors;
+    }
+
+    public void printBoard(){
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                BOARD[i][j].printCellValue();
+            }
+            System.out.println();
+        }
+    }
+
+    public void printBoardID(){
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                BOARD[i][j].printCellID();
+            }
+            System.out.println();
+        }
+    }
+
+    public void chooseSolver(String solver){
+        if (solver.equals("mouse")){
+            System.out.println("Solver type chosen is: " + solver);
+            mouse();
+        }
+        if (solver.equals("mouse_thread")){
+            System.out.println("Solver type chosen is: " + solver);
+        }
+        if (solver.equals("wall")){
+            System.out.println("Solver type chosen is: " + solver);
+        }
+        if (solver.equals("wall_thread")){
+            System.out.println("Solver type chosen is: " + solver);
+        }
+    }
+
+    public void mouse(){
+        printBoardID();
+        Cell c = BOARD[0][0];
+        ArrayList<String> openTravelOptions = new ArrayList<>();
+        while (c.getCELL_ID() != BOARD[BOARD_SIZE - 1][BOARD_SIZE - 1].getCELL_ID()){
+            if (!c.isUpWall()){
+                openTravelOptions.add("up");
+            }
+            if (!c.isRightWall()){
+                openTravelOptions.add("right");
+            }
+            if (!c.isDownWall()){
+                openTravelOptions.add("down");
+            }
+            if (!c.isLeftWall()){
+                openTravelOptions.add("left");
+            }
+            Collections.shuffle(openTravelOptions);
+            String directionTraveled = openTravelOptions.get(0);
+            openTravelOptions.remove(0);
+            switch (directionTraveled) {
+                case "up":
+                    c = BOARD[c.getROW() - 1][c.getCOL()];
+                    System.out.println("MOUSE TRAVELLED UP");
+                    System.out.println(c.getCELL_ID());
+                    break;
+                case "right":
+                    c = BOARD[c.getROW()][c.getCOL() + 1];
+                    System.out.println("MOUSE TRAVELLED RIGHT");
+                    System.out.println(c.getCELL_ID());
+                    break;
+                case "down":
+                    c = BOARD[c.getROW() + 1][c.getCOL()];
+                    System.out.println("MOUSE TRAVELLED DOWN");
+                    System.out.println(c.getCELL_ID());
+                    break;
+                case "left":
+                    c = BOARD[c.getROW()][c.getCOL() - 1];
+                    System.out.println("MOUSE TRAVELLED LEFT");
+                    System.out.println(c.getCELL_ID());
+                    break;
+            }
+            openTravelOptions.clear();
+        }
+        System.out.println("MOUSE MADE IT THROUGH THE MAZE!!!!");
+        System.out.println(c.getCELL_ID());
     }
 }

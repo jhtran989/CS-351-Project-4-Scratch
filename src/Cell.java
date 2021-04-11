@@ -1,6 +1,7 @@
 public class Cell {
     private int cellValue;
     private boolean visited;
+    private boolean solverTravelled;
     private boolean upWall;
     private boolean rightWall;
     private boolean downWall;
@@ -15,6 +16,7 @@ public class Cell {
         this.ROW = row;
         this.COL = col;
         visited = false;
+        solverTravelled = false;
         upWall = true;
         rightWall = true;
         downWall = true;
@@ -42,6 +44,14 @@ public class Cell {
         return visited;
     }
 
+    public void travelToCell(){
+        solverTravelled = true;
+    }
+
+    public boolean isSolverTravelled() {
+        return solverTravelled;
+    }
+
     public int getROW() {
         return ROW;
     }
@@ -64,5 +74,21 @@ public class Cell {
 
     public void setLeftWall(boolean leftWall) {
         this.leftWall = leftWall;
+    }
+
+    public boolean isUpWall() {
+        return upWall;
+    }
+
+    public boolean isRightWall() {
+        return rightWall;
+    }
+
+    public boolean isDownWall() {
+        return downWall;
+    }
+
+    public boolean isLeftWall() {
+        return leftWall;
     }
 }
