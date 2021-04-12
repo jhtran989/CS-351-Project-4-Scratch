@@ -1,7 +1,6 @@
 import javafx.application.Application;
+import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
@@ -10,6 +9,8 @@ import java.io.*;
 public class Mazes extends Application {
     private static int mazeSize;
     private static int cellSize;
+    private static int dimension;
+    private static int numberOfCells;
     private static String algorithm;
     private static String solver;
 
@@ -20,54 +21,46 @@ public class Mazes extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        dimension = mazeSize / cellSize;
+        numberOfCells = dimension * dimension;
+        Board b = new Board(dimension, cellSize);
+
         primaryStage.setTitle("Mazes");
-//        Canvas canvas = new Canvas(mazeSize, mazeSize);
-        int numberOfCells = (mazeSize / cellSize) * (mazeSize / cellSize);
-        System.out.println("Maze size: " + mazeSize);
-        System.out.println("Cell size: " + cellSize);
-        System.out.println("Number of cells: " + numberOfCells);
-//        TilePane tp = new TilePane();
-//        tp.setPrefRows(mazeSize/cellSize);
-//        tp.setPrefColumns(mazeSize/cellSize);
-//        Pane root = new Pane(tp);
+        TilePane tp = new TilePane();
 
-        Board b = new Board(mazeSize/cellSize);
-//        CellVisualTwo cv = new CellVisualTwo(cellSize);
-//        root.getChildren().add(cv);
-//        CellVisual cv = new CellVisual(cellSize);
-//        root.getChildren().add(cv.getG());
-//        cv.removeLeft();
-//        cv.removeBot();
-//        cv.removeRight();
-//        cv.removeTop();
-//        for (int i = 0; i < numberOfCells; i++) {
-//            tp.getChildren().add(i, new CellVisual(cellSize).getG());
-//        }
+        tp.setPrefRows(dimension);
+        tp.setPrefColumns(dimension);
 
-
-
+        Pane root = new Pane(tp);
 
         if (algorithm.equals("dfs")){
             System.out.println("Start cell: 0");
             System.out.println("Finish cell: " + (numberOfCells - 1));
-            b.printBoard();
-            System.out.println();
             b.depthFirstSearch(solver);
         }
 
         if (algorithm.equals("kruskal")){
-            b.printBoard();
-            System.out.println();
+            System.out.println("Start cell: 0");
+            System.out.println("Finish cell: " + (numberOfCells - 1));
             b.kruskal(solver);
         }
 
         if (algorithm.equals("prim")){
+            System.out.println("Start cell: 0");
+            System.out.println("Finish cell: " + (numberOfCells - 1));
             b.prim(solver);
         }
 
-//        Scene scene = new Scene(root);
-//        primaryStage.setScene(scene);
-//        primaryStage.show();
+        for (int i = 0; i < dimension; i++) {
+            for (int j = 0; j < dimension; j++) {
+                Cell c = b.getCell(i, j);
+                Group g = c.drawCell();
+                tp.getChildren().add(g);
+            }
+        }
+
+        primaryStage.setScene(new Scene(root));
+        primaryStage.show();
     }
 
     public static void readTheFile(String args) throws IOException {

@@ -1,4 +1,4 @@
-100
+400
 20
-dfs
-mouse
+prim
+wall

@@ -8,16 +8,20 @@ public class Board {
     private final Cell[][] BOARD;
     Stack<Cell> pathStack = new Stack<>();
 
-    public Board(int boardSize) {
+    public Board(int boardSize, int cellSize) {
         BOARD = new Cell[boardSize][boardSize];
         this.BOARD_SIZE = boardSize;
         int count = 0;
         for (int i = 0; i < boardSize; i++) {
             for (int j = 0; j < boardSize; j++) {
-                BOARD[i][j] = new Cell(0, i, j, count);
+                BOARD[i][j] = new Cell(0, i, j, count, cellSize);
                 count++;
             }
         }
+    }
+
+    public Cell getCell(int row, int col){
+        return BOARD[row][col];
     }
 
     public void depthFirstSearch(String solver){
