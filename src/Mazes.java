@@ -10,7 +10,6 @@ import java.io.*;
 public class Mazes extends Application {
     private static int mazeSize;
     private static int cellSize;
-    private static int numberOfCells;
     private static String algorithm;
     private static String solver;
 
@@ -23,7 +22,7 @@ public class Mazes extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Mazes");
 //        Canvas canvas = new Canvas(mazeSize, mazeSize);
-        numberOfCells = (mazeSize/cellSize) * (mazeSize/cellSize);
+        int numberOfCells = (mazeSize / cellSize) * (mazeSize / cellSize);
         System.out.println("Maze size: " + mazeSize);
         System.out.println("Cell size: " + cellSize);
         System.out.println("Number of cells: " + numberOfCells);
@@ -63,8 +62,6 @@ public class Mazes extends Application {
         }
 
         if (algorithm.equals("prim")){
-            b.printBoard();
-            System.out.println();
             b.prim(solver);
         }
 
