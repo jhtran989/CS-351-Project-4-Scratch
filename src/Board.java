@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.SplittableRandom;
 import java.util.Stack;
 
 public class Board {
@@ -103,6 +104,7 @@ public class Board {
         c.visit();
         ArrayList<Cell> neighbors = getNeighbors(c);
         while(!neighbors.isEmpty()){
+            Collections.shuffle(neighbors);
             c = neighbors.get(0);
             c.visit();
             neighbors.remove(0);
@@ -288,45 +290,149 @@ public class Board {
     }
 
     public void mouse(){
+        String directionTravelled = "down";
+        String directionTravelling;
+        ArrayList<String> openTravelOptions = new ArrayList<>();
         Cell c = BOARD[0][0];
         addSolverLocation(c);
-        ArrayList<String> openTravelOptions = new ArrayList<>();
+
         while (c.getCELL_ID() != BOARD[BOARD_SIZE - 1][BOARD_SIZE - 1].getCELL_ID()){
-            if (!c.isUpWall()){
-                openTravelOptions.add("up");
-            }
-            if (!c.isRightWall()){
-                openTravelOptions.add("right");
-            }
-            if (!c.isDownWall()){
-                openTravelOptions.add("down");
-            }
-            if (!c.isLeftWall()){
-                openTravelOptions.add("left");
-            }
+            openTravelOptions = mouseHelper(c);
             Collections.shuffle(openTravelOptions);
-            String directionTraveled = openTravelOptions.get(0);
-            openTravelOptions.remove(0);
-            switch (directionTraveled) {
-                case "up":
+            directionTravelling = openTravelOptions.get(0);
+            if (openTravelOptions.size() == 1){
+                if (directionTravelling.equals("up")){
                     c = BOARD[c.getROW() - 1][c.getCOL()];
+                    directionTravelled = "up";
                     addSolverLocation(c);
-                    break;
-                case "right":
+                }
+                if (directionTravelling.equals("right")){
                     c = BOARD[c.getROW()][c.getCOL() + 1];
+                    directionTravelled = "right";
                     addSolverLocation(c);
-                    break;
-                case "down":
+                }
+                if (directionTravelling.equals("down")){
                     c = BOARD[c.getROW() + 1][c.getCOL()];
+                    directionTravelled = "down";
                     addSolverLocation(c);
-                    break;
-                case "left":
+                }
+                if (directionTravelling.equals("left")){
                     c = BOARD[c.getROW()][c.getCOL() - 1];
+                    directionTravelled = "left";
                     addSolverLocation(c);
-                    break;
+                }
+            }
+            if (openTravelOptions.size() == 2){
+                if (directionTravelled.equals("down")){
+                    if (directionTravelling.equals("right")){
+                        c = BOARD[c.getROW()][c.getCOL() + 1];
+                        directionTravelled = "right";
+                        addSolverLocation(c);
+                    }
+                    if (directionTravelling.equals("down")){
+                        c = BOARD[c.getROW() + 1][c.getCOL()];
+                        directionTravelled = "down";
+                        addSolverLocation(c);
+                    }
+                    if (directionTravelling.equals("left")){
+                        c = BOARD[c.getROW()][c.getCOL() - 1];
+                        directionTravelled = "left";
+                        addSolverLocation(c);
+                    }
+                }
+                if (directionTravelled.equals("left")){
+                    if (directionTravelling.equals("up")){
+                        c = BOARD[c.getROW() - 1][c.getCOL()];
+                        directionTravelled = "up";
+                        addSolverLocation(c);
+                    }
+                    if (directionTravelling.equals("down")){
+                        c = BOARD[c.getROW() + 1][c.getCOL()];
+                        directionTravelled = "down";
+                        addSolverLocation(c);
+                    }
+                    if (directionTravelling.equals("left")){
+                        c = BOARD[c.getROW()][c.getCOL() - 1];
+                        directionTravelled = "left";
+                        addSolverLocation(c);
+                    }
+                }
+                if (directionTravelled.equals("up")){
+                    if (directionTravelling.equals("up")){
+                        c = BOARD[c.getROW() - 1][c.getCOL()];
+                        directionTravelled = "up";
+                        addSolverLocation(c);
+                    }
+                    if (directionTravelling.equals("right")){
+                        c = BOARD[c.getROW()][c.getCOL() + 1];
+                        directionTravelled = "right";
+                        addSolverLocation(c);
+                    }
+                    if (directionTravelling.equals("left")){
+                        c = BOARD[c.getROW()][c.getCOL() - 1];
+                        directionTravelled = "left";
+                        addSolverLocation(c);
+                    }
+                }
+                if (directionTravelled.equals("right")){
+                    if (directionTravelling.equals("up")){
+                        c = BOARD[c.getROW() - 1][c.getCOL()];
+                        directionTravelled = "up";
+                        addSolverLocation(c);
+                    }
+                    if (directionTravelling.equals("right")){
+                        c = BOARD[c.getROW()][c.getCOL() + 1];
+                        directionTravelled = "right";
+                        addSolverLocation(c);
+                    }
+                    if (directionTravelling.equals("down")){
+                        c = BOARD[c.getROW() + 1][c.getCOL()];
+                        directionTravelled = "down";
+                        addSolverLocation(c);
+                    }
+                }
+            }
+            if (openTravelOptions.size() == 3 || openTravelOptions.size() == 4){
+                if (directionTravelling.equals("up")){
+                    c = BOARD[c.getROW() - 1][c.getCOL()];
+                    directionTravelled = "up";
+                    addSolverLocation(c);
+                }
+                if (directionTravelling.equals("right")){
+                    c = BOARD[c.getROW()][c.getCOL() + 1];
+                    directionTravelled = "right";
+                    addSolverLocation(c);
+                }
+                if (directionTravelling.equals("down")){
+                    c = BOARD[c.getROW() + 1][c.getCOL()];
+                    directionTravelled = "down";
+                    addSolverLocation(c);
+                }
+                if (directionTravelling.equals("left")){
+                    c = BOARD[c.getROW()][c.getCOL() - 1];
+                    directionTravelled = "left";
+                    addSolverLocation(c);
+                }
             }
             openTravelOptions.clear();
         }
+    }
+
+    public ArrayList<String> mouseHelper(Cell c){
+        ArrayList<String> openTravelOptions = new ArrayList<>();
+        if (!c.isUpWall()){
+            openTravelOptions.add("up");
+        }
+        if (!c.isRightWall()){
+            openTravelOptions.add("right");
+        }
+        if (!c.isDownWall()){
+            openTravelOptions.add("down");
+        }
+        if (!c.isLeftWall()){
+            openTravelOptions.add("left");
+        }
+        return openTravelOptions;
     }
 
     public void wall(){

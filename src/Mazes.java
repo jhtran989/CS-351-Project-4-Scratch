@@ -59,6 +59,7 @@ public class Mazes extends Application {
             System.out.println("Finish cell: " + (numberOfCells - 1));
             initialBoard.depthFirstSearch(solver);
             actionList = initialBoard.getActionList();
+            trackerLocation = initialBoard.getSolverLocationList();
         }
 
         if (algorithm.equals("kruskal")){
@@ -66,6 +67,7 @@ public class Mazes extends Application {
             System.out.println("Finish cell: " + (numberOfCells - 1));
             initialBoard.kruskal(solver);
             actionList = initialBoard.getActionList();
+            trackerLocation = initialBoard.getSolverLocationList();
         }
 
         if (algorithm.equals("prim")){

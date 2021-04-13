@@ -35,7 +35,7 @@ public class Cell {
         Group cell = new Group();
 
         Rectangle cellBackGroundSolver = new Rectangle(CELL_SIZE, CELL_SIZE);
-        cellBackGroundSolver.setFill(Color.ORANGE);
+        cellBackGroundSolver.setFill(Color.BLUE);
 
         Rectangle cellBackGround = new Rectangle(CELL_SIZE, CELL_SIZE);
         cellBackGround.setFill(Color.GREEN);
