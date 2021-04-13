@@ -6,6 +6,8 @@ public class Board {
 
     private final int BOARD_SIZE;
     private final Cell[][] BOARD;
+    private ArrayList<Integer> actionList = new ArrayList<>();
+    private ArrayList<Integer> solverLocationList = new ArrayList<>();
     Stack<Cell> pathStack = new Stack<>();
 
     public Board(int boardSize, int cellSize) {
@@ -22,6 +24,15 @@ public class Board {
 
     public Cell getCell(int row, int col){
         return BOARD[row][col];
+    }
+
+    public Cell getCellFromID(int cellID){
+        if (cellID == 0){
+            return BOARD[0][0];
+        }
+        else{
+            return BOARD[cellID/BOARD_SIZE][cellID%BOARD_SIZE];
+        }
     }
 
     public void depthFirstSearch(String solver){
@@ -66,11 +77,15 @@ public class Board {
                     edges.get(0).takeDownHorizontalWall();
                     edges.get(0).getCELL_ONE().visit();
                     edges.get(0).getCELL_TWO().visit();
+                    addCellIDToActions(edges.get(0).getCELL_ONE());
+                    addCellIDToActions(edges.get(0).getCELL_TWO());
                 }
                 if (edges.get(0).isVERTICAL()){
                     edges.get(0).takeDownVerticalWall();
                     edges.get(0).getCELL_ONE().visit();
                     edges.get(0).getCELL_TWO().visit();
+                    addCellIDToActions(edges.get(0).getCELL_ONE());
+                    addCellIDToActions(edges.get(0).getCELL_TWO());
                 }
                 edges.remove(0);
             }
@@ -123,18 +138,26 @@ public class Board {
             if (direction.equals("north")){
                 c.setUpWall(false);
                 BOARD[c.getROW() - 1][c.getCOL()].setDownWall(false);
+                addCellIDToActions(c);
+                addCellIDToActions(BOARD[c.getROW() - 1][c.getCOL()]);
             }
             if (direction.equals("south")){
                 c.setDownWall(false);
                 BOARD[c.getROW() + 1][c.getCOL()].setUpWall(false);
+                addCellIDToActions(c);
+                addCellIDToActions(BOARD[c.getROW() + 1][c.getCOL()]);
             }
             if (direction.equals("west")){
                 c.setLeftWall(false);
                 BOARD[c.getROW()][c.getCOL() - 1].setRightWall(false);
+                addCellIDToActions(c);
+                addCellIDToActions(BOARD[c.getROW()][c.getCOL() - 1]);
             }
             if (direction.equals("east")){
                 c.setRightWall(false);
                 BOARD[c.getROW()][c.getCOL() + 1].setLeftWall(false);
+                addCellIDToActions(c);
+                addCellIDToActions(BOARD[c.getROW()][c.getCOL() + 1]);
             }
             directionChoices.clear();
         }
@@ -195,6 +218,8 @@ public class Board {
                 neighbors.add(BOARD[c.getROW() - 1][c.getCOL()]);
                 c.setUpWall(false);
                 BOARD[c.getROW() - 1][c.getCOL()].setDownWall(false);
+                addCellIDToActions(c);
+                addCellIDToActions(BOARD[c.getROW() - 1][c.getCOL()]);
             }
         }
         if (c.getROW() < (BOARD_SIZE - 1)){ //check down
@@ -202,6 +227,8 @@ public class Board {
                 neighbors.add(BOARD[c.getROW() + 1][c.getCOL()]);
                 c.setDownWall(false);
                 BOARD[c.getROW() + 1][c.getCOL()].setUpWall(false);
+                addCellIDToActions(c);
+                addCellIDToActions(BOARD[c.getROW() + 1][c.getCOL()]);
             }
         }
         if (c.getCOL() > 0){ //check left
@@ -209,6 +236,8 @@ public class Board {
                 neighbors.add(BOARD[c.getROW()][c.getCOL() - 1]);
                 c.setLeftWall(false);
                 BOARD[c.getROW()][c.getCOL() - 1].setRightWall(false);
+                addCellIDToActions(c);
+                addCellIDToActions(BOARD[c.getROW()][c.getCOL() - 1]);
             }
         }
         if (c.getCOL() < (BOARD_SIZE - 1)){ //check right
@@ -216,6 +245,8 @@ public class Board {
                 neighbors.add(BOARD[c.getROW()][c.getCOL() + 1]);
                 c.setRightWall(false);
                 BOARD[c.getROW()][c.getCOL() + 1].setLeftWall(false);
+                addCellIDToActions(c);
+                addCellIDToActions(BOARD[c.getROW()][c.getCOL() + 1]);
             }
         }
         return neighbors;
@@ -258,6 +289,7 @@ public class Board {
 
     public void mouse(){
         Cell c = BOARD[0][0];
+        addSolverLocation(c);
         ArrayList<String> openTravelOptions = new ArrayList<>();
         while (c.getCELL_ID() != BOARD[BOARD_SIZE - 1][BOARD_SIZE - 1].getCELL_ID()){
             if (!c.isUpWall()){
@@ -278,34 +310,29 @@ public class Board {
             switch (directionTraveled) {
                 case "up":
                     c = BOARD[c.getROW() - 1][c.getCOL()];
-                    System.out.println("MOUSE TRAVELLED UP");
-                    System.out.println(c.getCELL_ID());
+                    addSolverLocation(c);
                     break;
                 case "right":
                     c = BOARD[c.getROW()][c.getCOL() + 1];
-                    System.out.println("MOUSE TRAVELLED RIGHT");
-                    System.out.println(c.getCELL_ID());
+                    addSolverLocation(c);
                     break;
                 case "down":
                     c = BOARD[c.getROW() + 1][c.getCOL()];
-                    System.out.println("MOUSE TRAVELLED DOWN");
-                    System.out.println(c.getCELL_ID());
+                    addSolverLocation(c);
                     break;
                 case "left":
                     c = BOARD[c.getROW()][c.getCOL() - 1];
-                    System.out.println("MOUSE TRAVELLED LEFT");
-                    System.out.println(c.getCELL_ID());
+                    addSolverLocation(c);
                     break;
             }
             openTravelOptions.clear();
         }
-        System.out.println("MOUSE MADE IT THROUGH THE MAZE!!!!");
-        System.out.println(c.getCELL_ID());
     }
 
     public void wall(){
         //mouse enters maze from above the top left cell
         Cell c = BOARD[0][0];
+        addSolverLocation(c);
         String currentDirection = "south";
         while (c.getCELL_ID() != BOARD[BOARD_SIZE - 1][BOARD_SIZE - 1].getCELL_ID()){
             switch (currentDirection) {
@@ -386,10 +413,8 @@ public class Board {
                     }
                     break;
             }
-            System.out.println("WALL TRAVELER TRAVELLED TO " + c.getCELL_ID());
+            addSolverLocation(c);
         }
-        System.out.println("WALL TRAVELER MADE IT TO THE END OF THE MAZE!!!!");
-        System.out.println(c.getCELL_ID());
         //mouse finished, leaves the maze below the bottom right cell
         currentDirection = "north";
         while (c.getCELL_ID() != BOARD[0][0].getCELL_ID()){
@@ -471,10 +496,33 @@ public class Board {
                     }
                     break;
             }
-            System.out.println("WALL TRAVELER TRAVELLED TO " + c.getCELL_ID());
+            addSolverLocation(c);
         }
-        System.out.println("WALL TRAVELER MADE IT BACK HOME!!!");
-        System.out.println(c.getCELL_ID());
+    }
+
+    public void addCellIDToActions(Cell c){
+        actionList.add(c.getCELL_ID());
+    }
+
+    public ArrayList<Integer> getActionList(){
+        return actionList;
+    }
+
+    public void printActions(){
+        System.out.println(actionList);
+    }
+
+    public void addSolverLocation(Cell c){
+        solverLocationList.add(c.getCELL_ID());
+    }
+
+    public ArrayList<Integer> getSolverLocationList(){
+        return solverLocationList;
+    }
+
+    public void printSolverLocationList(){
+        System.out.println(solverLocationList);
     }
 
 }
+

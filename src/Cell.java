@@ -6,7 +6,7 @@ public class Cell {
     private int cellValue;
     private final int CELL_SIZE;
     private boolean visited;
-    private boolean solverTravelled;
+    private boolean solverLocation;
     private boolean upWall;
     private boolean rightWall;
     private boolean downWall;
@@ -23,7 +23,7 @@ public class Cell {
         this.COL = col;
         this.CELL_SIZE = cellSize;
         visited = false;
-        solverTravelled = false;
+        solverLocation = false;
         upWall = true;
         rightWall = true;
         downWall = true;
@@ -34,11 +34,11 @@ public class Cell {
     public Group drawCell() {
         Group cell = new Group();
 
-        Rectangle cellBackGroundUntraveled = new Rectangle(CELL_SIZE, CELL_SIZE);
-        cellBackGroundUntraveled.setFill(Color.GREEN);
+        Rectangle cellBackGroundSolver = new Rectangle(CELL_SIZE, CELL_SIZE);
+        cellBackGroundSolver.setFill(Color.ORANGE);
 
-        Rectangle cellBackGroundTraveled = new Rectangle(CELL_SIZE, CELL_SIZE);
-        cellBackGroundUntraveled.setFill(Color.GREEN);
+        Rectangle cellBackGround = new Rectangle(CELL_SIZE, CELL_SIZE);
+        cellBackGround.setFill(Color.GREEN);
 
         Rectangle topLeft = new Rectangle(2, 2);
         topLeft.setFill(Color.BLACK);
@@ -74,7 +74,13 @@ public class Cell {
         right.setX(CELL_SIZE - 2);
         right.setY(2);
 
-        cell.getChildren().addAll(cellBackGroundUntraveled, topLeft, topRight,
+        if (this.solverLocation){
+            cell.getChildren().add(cellBackGroundSolver);
+        }
+        else{
+            cell.getChildren().add(cellBackGround);
+        }
+        cell.getChildren().addAll(topLeft, topRight,
                 botLeft, botRight);
 
         if (this.upWall){
@@ -115,11 +121,15 @@ public class Cell {
     }
 
     public void travelToCell(){
-        solverTravelled = true;
+        solverLocation = true;
     }
 
-    public boolean isSolverTravelled() {
-        return solverTravelled;
+    public void leaveCell(){
+        solverLocation = false;
+    }
+
+    public boolean isSolverLocation() {
+        return solverLocation;
     }
 
     public int getROW() {

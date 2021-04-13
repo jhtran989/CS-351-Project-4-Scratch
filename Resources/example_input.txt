@@ -1,4 +1,4 @@
-400
+100
 20
 prim
-wall
+mouse
