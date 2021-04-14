@@ -15,6 +15,9 @@ public class Cell {
     private final int COL;
     private final int CELL_ID;
     private Group cellVisual;
+    private boolean solverPath;
+    private boolean startCell;
+    private boolean finishCell;
 
     public Cell(int value, int row, int col, int cellID, int cellSize) {
         this.cellValue = value;
@@ -28,14 +31,23 @@ public class Cell {
         rightWall = true;
         downWall = true;
         leftWall = true;
+        solverPath = false;
+        startCell = false;
+        finishCell = false;
         cellVisual = drawCell();
     }
 
     public Group drawCell() {
         Group cell = new Group();
 
+        Rectangle startAndFinishCell = new Rectangle(CELL_SIZE, CELL_SIZE);
+        startAndFinishCell.setFill(Color.RED);
+
         Rectangle cellBackGroundSolver = new Rectangle(CELL_SIZE, CELL_SIZE);
         cellBackGroundSolver.setFill(Color.BLUE);
+
+        Rectangle cellBackGroundSolverPath = new Rectangle(CELL_SIZE, CELL_SIZE);
+        cellBackGroundSolverPath.setFill(Color.DARKGREY);
 
         Rectangle cellBackGround = new Rectangle(CELL_SIZE, CELL_SIZE);
         cellBackGround.setFill(Color.GREEN);
@@ -74,12 +86,23 @@ public class Cell {
         right.setX(CELL_SIZE - 2);
         right.setY(2);
 
-        if (this.solverLocation){
-            cell.getChildren().add(cellBackGroundSolver);
+        if (startCell || finishCell){
+            cell.getChildren().add(startAndFinishCell);
         }
-        else{
-            cell.getChildren().add(cellBackGround);
+        else {
+            if (solverLocation){
+                cell.getChildren().add(cellBackGroundSolver);
+            }
+            else {
+                if (solverPath){
+                    cell.getChildren().add(cellBackGroundSolverPath);
+                }
+                else{
+                    cell.getChildren().add(cellBackGround);
+                }
+            }
         }
+
         cell.getChildren().addAll(topLeft, topRight,
                 botLeft, botRight);
 
@@ -105,6 +128,18 @@ public class Cell {
 
     public void printCellID(){
         System.out.print(CELL_ID + " ");
+    }
+
+    public void setSolverPath(){
+        solverPath = true;
+    }
+
+    public void setStartCell(){
+        startCell = true;
+    }
+
+    public void setFinishCell(){
+        finishCell = true;
     }
 
     public void visit(){

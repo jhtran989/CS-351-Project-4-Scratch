@@ -7,6 +7,8 @@ import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.stream.IntStream;
 
 public class Mazes extends Application {
     private static int mazeSize;
@@ -20,6 +22,10 @@ public class Mazes extends Application {
     private static TilePane tp;
     private static ArrayList<Integer> actionList;
     private static ArrayList<Integer> trackerLocation;
+    private static int cellOne;
+    private static int cellTwo;
+    private static int start;
+    private static int finish;
 
     public static void main(String[] args) throws IOException {
         readTheFile(args[0]);
@@ -33,7 +39,13 @@ public class Mazes extends Application {
         dimension = mazeSize / cellSize;
         numberOfCells = dimension * dimension;
         initialBoard = new Board(dimension, cellSize);
+        ArrayList<Integer> startFinish =
+                initialBoard.determineStartAndFinish();
+        start = startFinish.get(0);
+        finish = startFinish.get(1);
         actionBoard = new Board(dimension, cellSize);
+        actionBoard.getCellFromID(start).setStartCell();
+        actionBoard.getCellFromID(finish).setFinishCell();
         actionList = new ArrayList<>();
         trackerLocation = new ArrayList<>();
 
@@ -55,24 +67,18 @@ public class Mazes extends Application {
         root.setMaxSize(mazeSize, mazeSize);
 
         if (algorithm.equals("dfs")){
-            System.out.println("Start cell: 0");
-            System.out.println("Finish cell: " + (numberOfCells - 1));
             initialBoard.depthFirstSearch(solver);
             actionList = initialBoard.getActionList();
             trackerLocation = initialBoard.getSolverLocationList();
         }
 
         if (algorithm.equals("kruskal")){
-            System.out.println("Start cell: 0");
-            System.out.println("Finish cell: " + (numberOfCells - 1));
             initialBoard.kruskal(solver);
             actionList = initialBoard.getActionList();
             trackerLocation = initialBoard.getSolverLocationList();
         }
 
         if (algorithm.equals("prim")){
-            System.out.println("Start cell: 0");
-            System.out.println("Finish cell: " + (numberOfCells - 1));
             initialBoard.prim(solver);
             actionList = initialBoard.getActionList();
             trackerLocation = initialBoard.getSolverLocationList();
@@ -85,6 +91,8 @@ public class Mazes extends Application {
     }
 
     public void takeOutWalls(Board board, ArrayList<Integer> cellIDs){
+        cellOne = cellIDs.get(0);
+        cellTwo = cellIDs.get(1);
         if (cellIDs.get(0) == cellIDs.get(1) - 1){ //check right neighbor
             board.getCellFromID(cellIDs.get(0)).setRightWall(false);
             board.getCellFromID(cellIDs.get(1)).setLeftWall(false);
@@ -108,7 +116,9 @@ public class Mazes extends Application {
     public void updateLocation(Board board, ArrayList<Integer> location){
         if (location.size() > 1){
             board.getCellFromID(location.get(1)).travelToCell();
+
             board.getCellFromID(location.get(0)).leaveCell();
+            board.getCellFromID(location.get(0)).setSolverPath();
             location.remove(0);
         }
         else{
@@ -136,20 +146,19 @@ public class Mazes extends Application {
 
         @Override
         public void handle(long now) {
-            boolean goSolve = false;
             long dt = now - prevTime;
             if (dt > (1e7)) {
                 prevTime = now;
                 if (!actionList.isEmpty()){
-                    tp.getChildren().clear();
                     takeOutWalls(actionBoard, actionList);
-                    for (int i = 0; i < dimension; i++) {
-                        for (int j = 0; j < dimension; j++) {
-                            Cell c = actionBoard.getCell(i, j);
-                            Group g = c.drawCell();
-                            tp.getChildren().add(g);
-                        }
-                    }
+                    Cell c1 = actionBoard.getCellFromID(cellOne);
+                    Cell c2 = actionBoard.getCellFromID(cellTwo);
+                    Group g1 = c1.drawCell();
+                    Group g2 = c2.drawCell();
+                    tp.getChildren().remove(cellOne);
+                    tp.getChildren().add(cellOne, g1);
+                    tp.getChildren().remove(cellTwo);
+                    tp.getChildren().add(cellTwo, g2);
                 }
                 if (actionList.isEmpty()){
                     if (!trackerLocation.isEmpty()){
@@ -167,5 +176,4 @@ public class Mazes extends Application {
             }
         }
     }
-
 }
