@@ -6,6 +6,7 @@ public class Cell {
     private int cellValue;
     private final int CELL_SIZE;
     private boolean visited;
+    private boolean solverVisited;
     private boolean solverLocation;
     private boolean upWall;
     private boolean rightWall;
@@ -18,6 +19,7 @@ public class Cell {
     private boolean solverPath;
     private boolean startCell;
     private boolean finishCell;
+    private boolean doNotTravelHere;
 
     public Cell(int value, int row, int col, int cellID, int cellSize) {
         this.cellValue = value;
@@ -26,6 +28,7 @@ public class Cell {
         this.COL = col;
         this.CELL_SIZE = cellSize;
         visited = false;
+        solverVisited = false;
         solverLocation = false;
         upWall = true;
         rightWall = true;
@@ -35,6 +38,7 @@ public class Cell {
         startCell = false;
         finishCell = false;
         cellVisual = drawCell();
+        doNotTravelHere = false;
     }
 
     public Group drawCell() {
@@ -42,6 +46,9 @@ public class Cell {
 
         Rectangle startAndFinishCell = new Rectangle(CELL_SIZE, CELL_SIZE);
         startAndFinishCell.setFill(Color.RED);
+
+        Rectangle deadEndStartCell = new Rectangle(CELL_SIZE, CELL_SIZE);
+        deadEndStartCell.setFill(Color.DARKCYAN);
 
         Rectangle cellBackGroundSolver = new Rectangle(CELL_SIZE, CELL_SIZE);
         cellBackGroundSolver.setFill(Color.BLUE);
@@ -94,11 +101,16 @@ public class Cell {
                 cell.getChildren().add(cellBackGroundSolver);
             }
             else {
-                if (solverPath){
-                    cell.getChildren().add(cellBackGroundSolverPath);
+                if (doNotTravelHere){
+                    cell.getChildren().add(deadEndStartCell);
                 }
-                else{
-                    cell.getChildren().add(cellBackGround);
+                else {
+                    if (solverPath){
+                        cell.getChildren().add(cellBackGroundSolverPath);
+                    }
+                    else{
+                        cell.getChildren().add(cellBackGround);
+                    }
                 }
             }
         }
@@ -128,6 +140,14 @@ public class Cell {
 
     public void printCellID(){
         System.out.print(CELL_ID + " ");
+    }
+
+    public void setSolverVisited(){
+        solverVisited = true;
+    }
+
+    public void setDoNotTravelHere(){
+        doNotTravelHere = true;
     }
 
     public void setSolverPath(){

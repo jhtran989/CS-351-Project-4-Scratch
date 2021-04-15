@@ -198,11 +198,6 @@ public class Board {
                 }
             }
         }
-        for (Edge edge : edges) {
-            edge.getCELL_ONE().printCellID();
-            edge.getCELL_TWO().printCellID();
-            System.out.println();
-        }
         return edges;
     }
 
@@ -297,6 +292,7 @@ public class Board {
         }
         if (solver.equals("mouse_thread")){
             System.out.println("Solver type chosen is: " + solver);
+            mouseThread();
         }
         if (solver.equals("wall")){
             System.out.println("Solver type chosen is: " + solver);
@@ -304,6 +300,10 @@ public class Board {
         }
         if (solver.equals("wall_thread")){
             System.out.println("Solver type chosen is: " + solver);
+        }
+        if (solver.equals("deadend")){
+            System.out.println("Solver type chosen is: " + solver);
+            deadEndFilling();
         }
     }
 
@@ -398,6 +398,13 @@ public class Board {
             openTravelOptions.add("left");
         }
         return openTravelOptions;
+    }
+
+    public void mouseThread(){
+        Cell c = getCellFromID(startCell);
+        c.setSolverVisited();
+        ArrayList<Cell> neighbors = getNeighbors(c);
+
     }
 
     public void wall(){
@@ -568,6 +575,18 @@ public class Board {
                     break;
             }
             addSolverLocation(c);
+        }
+    }
+
+    public void deadEndFilling(){
+        //find start locations for threads:
+        for (int i = 0; i < (BOARD_SIZE * BOARD_SIZE); i++) {
+            Cell c = getCellFromID(i);
+            ArrayList<Cell> neighbors = getNeighbors(c);
+            if (neighbors.size() == 1){
+                neighbors.get(0).setDoNotTravelHere();
+            }
+            neighbors.clear();
         }
     }
 

@@ -114,7 +114,10 @@ public class Mazes extends Application {
     }
 
     public void updateLocation(Board board, ArrayList<Integer> location){
+
         if (location.size() > 1){
+            cellOne = location.get(0);
+            cellTwo = location.get(1);
             board.getCellFromID(location.get(1)).travelToCell();
 
             board.getCellFromID(location.get(0)).leaveCell();
@@ -147,7 +150,7 @@ public class Mazes extends Application {
         @Override
         public void handle(long now) {
             long dt = now - prevTime;
-            if (dt > (1e7)) {
+            if (dt > (1e6)) {
                 prevTime = now;
                 if (!actionList.isEmpty()){
                     takeOutWalls(actionBoard, actionList);
@@ -162,15 +165,15 @@ public class Mazes extends Application {
                 }
                 if (actionList.isEmpty()){
                     if (!trackerLocation.isEmpty()){
-                        tp.getChildren().clear();
                         updateLocation(actionBoard, trackerLocation);
-                        for (int i = 0; i < dimension; i++) {
-                            for (int j = 0; j < dimension; j++) {
-                                Cell c = actionBoard.getCell(i, j);
-                                Group g = c.drawCell();
-                                tp.getChildren().add(g);
-                            }
-                        }
+                        Cell c1 = actionBoard.getCellFromID(cellOne);
+                        Cell c2 = actionBoard.getCellFromID(cellTwo);
+                        Group g1 = c1.drawCell();
+                        Group g2 = c2.drawCell();
+                        tp.getChildren().remove(cellOne);
+                        tp.getChildren().add(cellOne, g1);
+                        tp.getChildren().remove(cellTwo);
+                        tp.getChildren().add(cellTwo, g2);
                     }
                 }
             }
