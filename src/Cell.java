@@ -1,14 +1,21 @@
-public class Cell {
+import javafx.scene.shape.Rectangle;
+
+public class Cell extends Rectangle {
     private int cellValue;
     private boolean visited;
     private boolean upWall;
     private boolean rightWall;
     private boolean downWall;
     private boolean leftWall;
+    private Edge upEdge;
+    private Edge rightEdge;
+    private Edge downEdge;
+    private Edge leftEdge;
     private final int ROW;
     private final int COL;
     private final int CELL_ID;
     private Cell previousCell;
+    private CellType cellType;
 
     public Cell(int value, int row, int col, int cellID) {
         this.CELL_ID = cellID;
@@ -20,6 +27,11 @@ public class Cell {
         rightWall = true;
         downWall = true;
         leftWall = true;
+
+        upEdge = null;
+        rightEdge = null;
+        downEdge = null;
+        leftEdge = null;
     }
 
     public void printCellValue(){
